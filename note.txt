@@ -1,3 +1,4 @@
+Django最小程序:返回一个字符串 hello.views->mysite.urls
 步骤1：新建一个Web框架工程 (工程：一个应用的程序员说法)
     django-admin startproject mysite
     目录结构
@@ -28,3 +29,34 @@
                 path('admin/', admin.site.urls),
             ]
 步骤3：运行工程：python manage.py runserve
+
+
+Django最小程序的改进:返回一个HTML页面，而不是一个字符串,建立模板（T），对应特定请求，返回模板页面
+步骤2：修改工程，增加功能
+    步骤2-1：新建hello2app应用
+        python manage.py startapp hello2app
+    步骤2-2：使用test.html为返回页面，修改hello2app/views.py
+        #render()是一个打包函数，第一个参数是request，第二个参数是页面
+        from django.shortcuts import render
+        def hello(request):
+            return render(request, "test.html")
+    步骤2-3：在hello2app应用中，新增urls.py文件（本地路由文件）
+        from django.urls import path
+        from . import views
+        urlpatterns = [
+            path('', views.hello)
+        ]
+    步骤2-4：在全局路由文件中增加对本应用路由文件的引用
+        from django.contrib import admin
+        from django.urls import include, path
+        from helloapp import views
+        urlpatterns = [
+            path('index2/', include('hello2app.urls')),
+            path('index/', views.hello),
+            path('admin/', admin.site.urls),
+        ]
+    步骤2-5：设置模板路径，让Django框架找到模板所在目录
+        'DIRS': [os.path.join(BASE_DIR, 'hello2app/templates')],
+
+
+
